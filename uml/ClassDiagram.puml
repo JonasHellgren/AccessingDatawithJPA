@@ -1,0 +1,39 @@
+@startuml
+
+!define DARKBLUE
+!include https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
+!define CLASSCOMMENT(x) <color:white>x</color>
+!define COMMENT(x) <color:yellow>x</color>
+
+class AccessingDataJpaApplication {
++CommandLineRunner demo(CustomerRepository repository)  COMMENT(Multiple repository calls)
+}
+
+interface  CrudRepository {
+CLASSCOMMENT(Including methods for saving deleting and finding Customer entitie)
+}
+
+interface CustomerRepository {
+CLASSCOMMENT(You need not write an implementation of the repository interface.)
+CLASSCOMMENT(Spring Data JPA creates an implementation when you run the application.)
+ List<Customer> findByLastName(String lastName)  COMMENT(JPA also lets you define other query methods)
+ Customer findById(long id);
+}
+
+entity  Customer {
+CLASSCOMMENT(he Customer class is annotated with Entity. Indicating that it is a JPA entity)
+CLASSCOMMENT(no @Table annotation exists <=> it is assumed it is mapped to a table named Customer)
+    private Long id  COMMENT(annotated with @Id so that JPA recognizes it as the object’s ID)
+    private String firstName  COMMENT(unannotated <=> mapped to columns)
+    private String lastName  COMMENT(unannotated <=> mapped to columns)
+    +getter methods()
+ }
+
+
+AccessingDataJpaApplication -->  CustomerRepository
+CrudRepository <|--  CustomerRepository
+
+ CustomerRepository -down->   Customer
+
+@enduml
+
